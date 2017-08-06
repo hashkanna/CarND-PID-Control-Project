@@ -19,7 +19,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -31,60 +31,49 @@ Self-Driving Car Engineer Nanodegree Program
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
-## Editor Settings
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+## Implementation
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+The PID Controller is implemented using the three variables P, I and D.
+* P = Proportional(P) value corresponding to the CrossTrackError which is the distance of the car from the reference trajectory. This is used to steer the car to the right trajectory
+* I = cumulative total of the errors seen so far
+* D = Correcting P so as to smoothen and reduce the overshooting/oscillating nature of P
 
-## Code Style
+The formula for updating the error correction is below
+d_error = cte - p_error
+p_error = cte
+i_error = cte + i_error
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+The total error is calculated using the weighted sum using Kp, Ki and Kd coefficients
+-Kp*p_error - Ki*i_error - Kd*d_error;
 
-## Project Instructions and Rubric
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+## Reflection
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
+### Effect of P, I, D controllers
 
-## Hints!
+* The P controller adjusts the steering based on how far the car is from the reference trajectory. A large P gain made the car overshoot and oscillate out of the track. It pushed the steering value to the max and in the next step tried to correct it but instead of making the necessary correction, it overshot in the opposite direction. And the cycle continued.
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+* The D controller helped in balancing the heavy oscillation of the P gain. It used the rate of change of the P gain to control the car from oscillating too much.
 
-## Call for IDE Profiles Pull Requests
+* The I controller ensured that the car stayed closer to the track. A very small value of I was enough for this specific track.
 
-Help your fellow students!
+### Choosing Hyperparameters
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
+* The Hyperparameters were hand tuned by performing several experiments
+* Here are a few
+<table>
+<tr><td>pid.Init(0.0, 0.0, 0.0);</td><td>travels in a straight line and moves out of the track</td></tr>
+<tr><td>pid.Init(10.0, 0.0, 0.0);</td><td>extremely volatile steering angle oscillations because of high P value - stops as soon as it nears the curve</td></tr>
+<tr><td>pid.Init(10.0, 0.0, 50.0);</td><td>moves to a decent distance because of D's opposition to P - but gets out of track & stops</td></tr>
+<tr><td>pid.Init(10.0, 5.0, 3.0);</td><td>keeps circling around as soon as it starts</td></tr>
+<tr><td>pid.Init(0.5, 0.001, 2.2);</td><td>Works kind of ok but starts oscillating near the curve & stops in deep curves</td></tr>
+<tr><td>pid.Init(0.2, 0.001, 2.0);</td><td>Completes a lap but zigzags till the end and then fails in the next lap</td></tr>
+<tr><td>pid.Init(0.1, 0.0001, 2.0);</td><td>near perfect. completes several laps. touches the red lines occassionally</td></tr>
+<tr><td>pid.Init(0.13, 0.0003, 2.0);</td><td>Final choice. slightly oscillating but does the job</td></tr>
 
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
-
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
+## Simulation
+![Final Image](final.png)

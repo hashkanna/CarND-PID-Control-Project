@@ -34,6 +34,15 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
+   // pid.Init(0.0, 0.0, 0.0); - travels in a straight line and moves out of the track
+   // pid.Init(10.0, 0.0, 0.0); - extremely volatile steering angle oscillations because of high P value - stops as soon as it nears the curve
+   // pid.Init(10.0, 0.0, 50.0); - moves to a decent distance because of D's opposition to P - but gets out of track & stops
+   // pid.Init(10.0, 5.0, 3.0); - keeps circling around as soon as it starts
+   // pid.Init(0.5, 0.001, 2.2); - Works kind of ok but starts oscillating near the curve & stops in deep curves
+   // pid.Init(0.2, 0.001, 2.0); - Completes a lap but zigzags till the end and then fails in the next lap
+   // pid.Init(0.1, 0.0001, 2.0); - near perfect. completes several laps. touches the red lines occassionally
+   pid.Init(0.13, 0.0003, 2.0); // - slightly oscillating but does the job
+
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -57,7 +66,12 @@ int main()
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
-          
+          // error update
+          pid.UpdateError(cte);
+          // steering value is the sum of all P,I,D errors
+          steer_value = pid.TotalError();
+
+
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
