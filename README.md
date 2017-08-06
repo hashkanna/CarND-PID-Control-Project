@@ -41,7 +41,7 @@ The PID Controller is implemented using the three variables P, I and D.
 * I = cumulative total of the errors seen so far
 * D = Correcting P so as to smoothen and reduce the overshooting/oscillating nature of P
 
-The formula for updating the error correction is below
+The formula for updating the error correction is below  
 d_error = cte - p_error  
 p_error = cte  
 i_error = cte + i_error  
