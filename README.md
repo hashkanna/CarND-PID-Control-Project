@@ -76,6 +76,10 @@ The total error is calculated using the weighted sum using Kp, Ki and Kd coeffic
 <tr><td>pid.Init(0.13, 0.0003, 2.0);</td><td>Final choice. slightly oscillating but does the job</td></tr>
 </table>
 
+Images of some of the erroneous ones below
+![1](1.png)
+![2](2.png)
+![3](3.png)
 
 ## Simulation
 ![Final Image](final.png)
