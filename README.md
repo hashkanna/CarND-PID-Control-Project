@@ -65,6 +65,7 @@ The total error is calculated using the weighted sum using Kp, Ki and Kd coeffic
 * The Hyperparameters were hand tuned by performing several experiments
 * Here are a few
 <table>
+<tr><th>PID Values</th><th>Observations</th></tr>
 <tr><td>pid.Init(0.0, 0.0, 0.0);</td><td>travels in a straight line and moves out of the track</td></tr>
 <tr><td>pid.Init(10.0, 0.0, 0.0);</td><td>extremely volatile steering angle oscillations because of high P value - stops as soon as it nears the curve</td></tr>
 <tr><td>pid.Init(10.0, 0.0, 50.0);</td><td>moves to a decent distance because of D's opposition to P - but gets out of track & stops</td></tr>
@@ -73,6 +74,7 @@ The total error is calculated using the weighted sum using Kp, Ki and Kd coeffic
 <tr><td>pid.Init(0.2, 0.001, 2.0);</td><td>Completes a lap but zigzags till the end and then fails in the next lap</td></tr>
 <tr><td>pid.Init(0.1, 0.0001, 2.0);</td><td>near perfect. completes several laps. touches the red lines occassionally</td></tr>
 <tr><td>pid.Init(0.13, 0.0003, 2.0);</td><td>Final choice. slightly oscillating but does the job</td></tr>
+</table>
 
 
 ## Simulation
