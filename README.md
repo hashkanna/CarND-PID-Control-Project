@@ -82,4 +82,6 @@ Images of some of the erroneous ones below
 ![3](3.png)
 
 ## Simulation
+
+Final Image  
 ![Final Image](final.png)
