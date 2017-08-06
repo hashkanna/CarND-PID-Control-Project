@@ -42,12 +42,12 @@ The PID Controller is implemented using the three variables P, I and D.
 * D = Correcting P so as to smoothen and reduce the overshooting/oscillating nature of P
 
 The formula for updating the error correction is below
-d_error = cte - p_error
-p_error = cte
-i_error = cte + i_error
+d_error = cte - p_error  
+p_error = cte  
+i_error = cte + i_error  
 
 The total error is calculated using the weighted sum using Kp, Ki and Kd coefficients
--Kp*p_error - Ki*i_error - Kd*d_error;
+-Kp * p_error - Ki * i_error - Kd * d_error;
 
 
 ## Reflection
@@ -62,8 +62,8 @@ The total error is calculated using the weighted sum using Kp, Ki and Kd coeffic
 
 ### Choosing Hyperparameters
 
-* The Hyperparameters were hand tuned by performing several experiments
-* Here are a few
+* The Hyperparameters were hand tuned by performing several experiments. Details in below table.
+
 <table>
 <tr><th>PID Values</th><th>Observations</th></tr>
 <tr><td>pid.Init(0.0, 0.0, 0.0);</td><td>travels in a straight line and moves out of the track</td></tr>
